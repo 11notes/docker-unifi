@@ -15,10 +15,8 @@ RUN apt-get install -y wget \
     && dpkg -i /tmp/unifi.deb \
     && rm -f /tmp/unifi.deb
 
-RUN ln -s /unifi /var/lib/unifi/data
-
 # ------ VOLUMES ------ #
-VOLUME ["/unifi"]
+VOLUME ["/var/lib/unifi"]
 
 # ------ CMD/START ------ #
 ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
