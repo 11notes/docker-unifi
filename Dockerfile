@@ -18,6 +18,6 @@ RUN apt-get install -y wget \
 # ------ VOLUMES ------ #
 VOLUME ["/usr/lib/unifi/data", "/usr/lib/unifi/logs"]
 
-# ------ CMD/START ------ #
+# ------ CMD/START/STOP ------ #
 ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
 CMD ["start"]
