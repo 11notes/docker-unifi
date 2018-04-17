@@ -1,6 +1,6 @@
 # ------ HEADER ------ #
 FROM ubuntu:16.04
-ENV unifiVersion=5.6.30
+ENV unifiVersion=5.7.23
 ARG DEBIAN_FRONTEND=noninteractive
 
 # ------ RUN  ------ #
