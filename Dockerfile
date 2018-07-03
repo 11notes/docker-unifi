@@ -9,7 +9,7 @@ RUN echo "deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiver
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv EA312927
 
 RUN apt-get update \
-    && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless
+    && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless curl
 
 RUN apt-get install -y wget \
     && wget -O /tmp/unifi.deb http://dl.ubnt.com/unifi/${unifiVersion}/unifi_sysvinit_all.deb \
