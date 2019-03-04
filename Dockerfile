@@ -1,6 +1,6 @@
 # :: Header
 FROM ubuntu:16.04
-ENV unifiVersion=5.10.12-20644d4901
+ENV unifiVersion=5.10.19
 ARG DEBIAN_FRONTEND=noninteractive
 
 
