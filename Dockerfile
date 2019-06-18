@@ -1,6 +1,7 @@
 # :: Header
 FROM ubuntu:16.04
 ENV unifiVersion=5.10.25
+ENV unifiRCVersion=48e13746e9
 ARG DEBIAN_FRONTEND=noninteractive
 
 
@@ -12,7 +13,7 @@ RUN apt-get update \
     && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless curl
 
 RUN apt-get install -y wget \
-    && wget -O /tmp/unifi.deb https://dl.ubnt.com/unifi/${unifiVersion}/unifi_sysvinit_all.deb \
+    && wget -O /tmp/unifi.deb https://dl.ui.com/unifi/${unifiVersion}-${unifiRCVersion}/unifi_sysvinit_all.deb \
     && dpkg -i /tmp/unifi.deb \
     && rm -f /tmp/unifi.deb
 
