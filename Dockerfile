@@ -37,8 +37,10 @@ RUN chown -R unifi:unifi \
 # :: Volumes
 VOLUME ["/usr/lib/unifi/data", "/usr/lib/unifi/logs"]
 
+
 # :: Monitor
 HEALTHCHECK CMD /usr/local/bin/healthcheck.sh || exit 1
+
 
 # :: Start
 USER unifi
