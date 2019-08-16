@@ -1,7 +1,7 @@
 # :: Header
 FROM ubuntu:16.04
-ENV unifiVersion=5.10.25
-ENV unifiCommitVersion=48e13746e9
+ENV unifiVersion=5.11.38
+ENV unifiReleaseCandidate=65a83af88b
 ARG DEBIAN_FRONTEND=noninteractive
 
 
@@ -12,8 +12,13 @@ RUN echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mon
 RUN apt-get update \
     && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless curl
 
-RUN apt-get install -y wget \
-    && wget -O /tmp/unifi.deb https://dl.ui.com/unifi/${unifiVersion}-${unifiCommitVersion}/unifi_sysvinit_all.deb \
+RUN if [ "x${unifiReleaseCandidate}" = "x" ] ; then \
+        unifiReleaseURI="https://dl.ui.com/unifi/${unifiVersion}/unifi_sysvinit_all.deb"; \
+    else \
+        unifiReleaseURI="https://dl.ui.com/unifi/${unifiVersion}-${unifiReleaseCandidate}/unifi_sysvinit_all.deb"; \
+    fi \
+    &&apt-get install -y wget \
+    && wget -O /tmp/unifi.deb "${unifiReleaseURI}" \
     && dpkg -i /tmp/unifi.deb \
     && rm -f /tmp/unifi.deb
 
