@@ -10,7 +10,7 @@ RUN echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mon
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
 
 RUN apt-get update \
-    && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless curl
+    && apt-get -y install binutils jsvc mongodb-org openjdk-8-jre-headless curl logrotate
 
 RUN if [ "x${unifiReleaseCandidate}" = "x" ] ; then \
         unifiReleaseURI="https://dl.ui.com/unifi/${unifiVersion}/unifi_sysvinit_all.deb"; \
