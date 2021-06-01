@@ -1,6 +1,6 @@
 # :: Header
 FROM ubuntu:20.04
-ENV UNIFI=6.0.43
+ENV UNIFI=6.2.25
 ARG DEBIAN_FRONTEND=noninteractive
 
 
