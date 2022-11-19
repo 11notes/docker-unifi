@@ -9,7 +9,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
     # :: prepare
         RUN set -ex; \
-            mkdir -p /unifi;
+            mkdir -p /unifi; \
+            mkdir -p /unifi/etc;
 
     # :: install
         ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
@@ -24,7 +25,8 @@ ARG DEBIAN_FRONTEND=noninteractive
                 libcap2 \
                 logrotate; \
            dpkg -i /tmp/unifi.deb; \
-           ln -s /var/lib/unifi /unifi/var;
+           rm -rf /usr/lib/unifi/data; \
+           ln -sf /unifi/etc /usr/lib/unifi/data;
 
 
     # :: copy root filesystem changes
@@ -38,6 +40,7 @@ ARG DEBIAN_FRONTEND=noninteractive
         RUN usermod -u 1000 unifi \
             && groupmod -g 1000 unifi
         RUN chown -R unifi:unifi \
+                /unifi \
                 /usr/lib/unifi \
                 /var/run/unifi \
                 /var/lib/unifi \

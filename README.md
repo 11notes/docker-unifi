@@ -3,21 +3,13 @@
 Small container with unifi controller installed
 
 ## Volumes
-
-/usr/lib/unifi/data
-
-Purpose: Unifi program data
-
-/usr/lib/unifi/logs
-
-Purpose: Unifi/MongoDB logs
+* /unifi/etc - Purpose: Holds all configuration data and sites
 
 ## Run
 ```shell
 docker run --name unifi \
-    -v volume-log:/usr/lib/unifi/logs \
-    -v volume-data:/usr/lib/unifi/data \
-    -d 11notes/unifi:latest
+    -v /.../var:/unifi/var \
+    -d 11notes/unifi:[tag]
 ```
 
 ## Docker -u 1000:1000 (no root initiative)
