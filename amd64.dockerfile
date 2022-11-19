@@ -1,24 +1,31 @@
 # :: Header
 FROM ubuntu:20.04
-ENV UNIFI=6.2.25
+ENV UNIFI=7.2.95
 ARG DEBIAN_FRONTEND=noninteractive
 
 
 # :: Run
     USER root
 
+    # :: prepare
+        RUN set -ex; \
+            mkdir -p /unifi;
+
     # :: install
         ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
-        RUN apt-get update -y && apt-get install -y \
+        RUN set -ex; \
+            apt-get update -y; apt-get install -y \
                 mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
                 openjdk-8-jre-headless \
                 binutils \
                 jsvc \
                 curl \
                 libcap2 \
-                logrotate \
-            && dpkg -i /tmp/unifi.deb
+                logrotate; \
+           dpkg -i /tmp/unifi.deb; \
+           ln -s /var/lib/unifi /unifi/var;
+
 
     # :: copy root filesystem changes
         COPY ./rootfs /
@@ -36,18 +43,15 @@ ARG DEBIAN_FRONTEND=noninteractive
                 /var/lib/unifi \
                 /var/log/unifi
 
-
 # :: Volumes
-    VOLUME ["/usr/lib/unifi/data"]
+    VOLUME ["/unifi/var"]
 
 
 # :: Monitor
-    RUN apt-get update && apt-get -y install curl
-    RUN chmod +x /usr/local/bin/healthcheck.sh
+    RUN set -ex; chmod +x /usr/local/bin/healthcheck.sh
     HEALTHCHECK CMD /usr/local/bin/healthcheck.sh || exit 1
 
-
 # :: Start
+    RUN set -ex; chmod +x /usr/local/bin/entrypoint.sh
     USER unifi
-    ENTRYPOINT ["/usr/bin/java", "-Xmx1024M", "-jar", "/usr/lib/unifi/lib/ace.jar"]
-    CMD ["start"]
+    ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
