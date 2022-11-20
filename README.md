@@ -1,5 +1,4 @@
-# docker-unifi
-
+# Info
 Small container with unifi controller installed
 
 ## Volumes
@@ -8,15 +7,14 @@ Small container with unifi controller installed
 ## Run
 ```shell
 docker run --name unifi \
-    -v /.../var:/unifi/var \
+    -v /.../etc:/unifi/etc \
     -d 11notes/unifi:[tag]
 ```
 
 ## Docker -u 1000:1000 (no root initiative)
-
 As part to make containers more secure, this container will not run as root, but as uid:gid 1000:1000
 
-## Build with
+## Built with
 * [Ubuntu](https://hub.docker.com/_/ubuntu) - Parent container
 * [Ubiquiti Unifi SDN](https://community.ubnt.com/t5/UniFi-Updates-Blog/bg-p/Blog_UniFi) - Unifi Update Blog
 
