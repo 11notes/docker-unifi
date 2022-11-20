@@ -16,13 +16,14 @@ ARG DEBIAN_FRONTEND=noninteractive
         ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
         RUN set -ex; \
-            apt-get update -y; apt-get install -y \
+            apt update -y; apt install -y \
                 mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
                 openjdk-8-jre-headless \
                 binutils \
                 jsvc \
                 curl \
                 libcap2 \
+                liblog4j2-java \
                 logrotate; \
            dpkg -i /tmp/unifi.deb; \
            rm -rf /usr/lib/unifi/data; \
