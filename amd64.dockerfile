@@ -1,7 +1,7 @@
 # :: Header
 FROM ubuntu:20.04
 ENV UNIFI=7.2.95
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 
 # :: Run
@@ -38,14 +38,17 @@ ARG DEBIAN_FRONTEND=noninteractive
             && APP_GID="$(id -g unifi)" \
             && find / -not -path "/proc/*" -user $APP_UID -exec chown -h -R 1000:1000 {} \;\
             && find / -not -path "/proc/*" -group $APP_GID -exec chown -h -R 1000:1000 {} \;
-        RUN usermod -u 1000 unifi \
-            && groupmod -g 1000 unifi
-        RUN chown -R unifi:unifi \
+        RUN set -ex; \
+            usermod -u 1000 unifi; \
+            groupmod -g 1000 unifi;
+
+        RUN set -ex; \
+            chown -R unifi:unifi \
                 /unifi \
                 /usr/lib/unifi \
                 /var/run/unifi \
                 /var/lib/unifi \
-                /var/log/unifi
+                /var/log/unifi;
 
 # :: Volumes
     VOLUME ["/unifi/var"]

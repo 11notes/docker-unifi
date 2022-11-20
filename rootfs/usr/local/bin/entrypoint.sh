@@ -1,8 +1,8 @@
 #!/bin/bash
 if [ -z "$1" ]; then
     set -- "/usr/bin/java" \
-        -Xmx1024M \
-        -jar /usr/lib/unifi/lib/ace.jar
+        -Dlog4j2.formatMsgNoLookups=true \
+        -jar /usr/lib/unifi/lib/ace.jar start
 fi
 
 exec "$@"
