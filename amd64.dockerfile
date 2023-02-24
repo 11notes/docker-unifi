@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive
         RUN set -ex; \
             apt update -y; apt install -y \
                 mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
-                openjdk-8-jre-headless \
+                openjdk-11-jre-headless \
                 binutils \
                 jsvc \
                 curl \
