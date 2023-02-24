@@ -1,6 +1,6 @@
 # :: Header
 FROM ubuntu:20.04
-ENV UNIFI=7.2.95
+ENV UNIFI=7.3.83
 ENV DEBIAN_FRONTEND=noninteractive
 
 
@@ -13,6 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive
             mkdir -p /unifi/etc;
 
     # :: install
+        # https://community.ui.com/RELEASES
         ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
         RUN set -ex; \
