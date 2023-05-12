@@ -13,7 +13,7 @@
 
   # :: install
   # https://community.ui.com/RELEASES
-    ADD 8
+    ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
       apt update -y; apt upgrade -y; apt install -y \
