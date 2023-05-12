@@ -1,7 +1,7 @@
 # :: Header
   FROM ubuntu:20.04
-  ENV UNIFI=7.3.83
   ENV DEBIAN_FRONTEND=noninteractive
+  ENV UNIFI=7.3.83
 
 # :: Run
   USER root
@@ -13,7 +13,7 @@
 
   # :: install
   # https://community.ui.com/RELEASES
-    ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
+    ADD 8
 
     RUN set -ex; \
       apt update -y; apt upgrade -y; apt install -y \
@@ -37,9 +37,10 @@
 
   # :: docker -u 1000:1000 (no root initiative)
     RUN set -ex; \
-      APP_UID="$(id -u unifi)"; \
-      APP_GID="$(id -g unifi)"; \
-      find / -not -path "/proc/*" -user $APP_UID -exec chown -h -R 1000:1000 {} \; \
+      APP_USER=unifi; \
+      APP_UID="$(id -u ${APP_USER})"; \
+      APP_GID="$(id -g ${APP_USER})"; \
+      find / -not -path "/proc/*" -user $APP_UID -exec chown -h -R 1000:1000 {} \;; \
       find / -not -path "/proc/*" -group $APP_GID -exec chown -h -R 1000:1000 {} \;
 
     RUN set -ex; \
