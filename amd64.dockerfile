@@ -12,7 +12,7 @@
       mkdir -p /unifi/var;
 
   # :: install
-  # https://community.ui.com/RELEASES
+  # https://community.ui.com/RELEASES UniFi Network Application
     ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
@@ -28,7 +28,8 @@
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
       rm -rf /usr/lib/unifi/data; \
-      ln -sf /unifi/var /usr/lib/unifi/data;
+      ln -sf /unifi/var /usr/lib/unifi/data; \
+      ln -sf /unifi/log /var/lib/unifi/logs;
 
   # :: copy root filesystem changes
     COPY ./rootfs /
@@ -37,23 +38,21 @@
 
   # :: docker -u 1000:1000 (no root initiative)
     RUN set -ex; \
-      APP_USER=unifi; \
-      APP_UID="$(id -u ${APP_USER})"; \
-      APP_GID="$(id -g ${APP_USER})"; \
-      find / -not -path "/proc/*" -user $APP_UID -exec chown -h -R 1000:1000 {} \;; \
-      find / -not -path "/proc/*" -group $APP_GID -exec chown -h -R 1000:1000 {} \;
+      NOROOT_USER="unifi" \
+      NOROOT_UID="$(id -u ${NOROOT_USER})"; \
+      NOROOT_GID="$(id -g ${NOROOT_USER})"; \
+      find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 1000:1000 {} \;;\
+      find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 1000:1000 {} \;;
 
     RUN set -ex; \
       usermod -u 1000 unifi; \
-      groupmod -g 1000 unifi;
-
-    RUN set -ex; \
+      groupmod -g 1000 unifi; \
       chown -R unifi:unifi \
         /unifi \
         /usr/lib/unifi \
         /var/run/unifi \
         /var/lib/unifi \
-        /var/log/unifi;
+        /var/log/unifi;      
 
 # :: Volumes
   VOLUME ["/unifi/var"]
