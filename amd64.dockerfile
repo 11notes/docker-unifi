@@ -59,7 +59,7 @@
         /usr/lib/unifi \
         /var/run/unifi \
         /var/lib/unifi \
-        /var/log/unifi;    
+        /var/log/unifi;
 
 # :: Volumes
   VOLUME ["/unifi/var"]
