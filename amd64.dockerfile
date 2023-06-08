@@ -13,9 +13,7 @@
 
   # :: prepare image
     RUN set -ex; \
-      mkdir -p /unifi; \
-      mkdir -p /unifi/var;\
-      mkdir -p /unifi/log;
+      mkdir -p /unifi;
 
   # https://community.ui.com/RELEASES UniFi Network Application
     ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
