@@ -32,9 +32,8 @@
         tzdata \
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
-      rm -rf /usr/lib/unifi/data; \
-      ln -sf /unifi/var /usr/lib/unifi/data; \
-      ln -sf /unifi/log /var/lib/unifi/logs;
+      ln -s /usr/lib/unifi/data /unifi/var; \
+      ln -s /var/lib/unifi/logs /unifi/log;
 
   # :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
