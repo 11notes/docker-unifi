@@ -30,8 +30,8 @@
         tzdata \
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
-      ln -s /usr/lib/unifi/data /unifi/var; \
-      ln -s /var/lib/unifi/logs /unifi/log;
+      ln -s /var/lib/unifi /unifi/var; \
+      ln -s /var/log/unifi /unifi/log;
 
   # :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
@@ -45,8 +45,10 @@
       NOROOT_GID="$(id -g ${NOROOT_USER})"; \
       find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 1000:1000 {} \;;\
       find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 1000:1000 {} \;; \
+      usermod -u 1000 ${NOROOT_USER}; \
+      groupmod -g 1000 ${NOROOT_USER}; \
       usermod -l docker ${NOROOT_USER}; \
-      groupmod -n docker ${NOROOT_USER};   
+      groupmod -n docker ${NOROOT_USER};
 
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
