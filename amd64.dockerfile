@@ -1,7 +1,8 @@
 # :: Header
   FROM ubuntu:20.04
   ENV DEBIAN_FRONTEND=noninteractive
-  ENV UNIFI=7.4.156
+  ENV APP_VERSION="7.5.176"
+  ENV APP_ROOT="/unifi"
 
 # :: Run
   USER root
@@ -13,10 +14,10 @@
 
   # :: prepare image
     RUN set -ex; \
-      mkdir -p /unifi;
+      mkdir -p ${APP_ROOT};
 
   # https://community.ui.com/RELEASES UniFi Network Application
-    ADD https://dl.ui.com/unifi/${UNIFI}/unifi_sysvinit_all.deb /tmp/unifi.deb
+    ADD https://dl.ui.com/unifi/${APP_VERSION}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
       apt install -y \
@@ -30,8 +31,8 @@
         tzdata \
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
-      ln -s /var/lib/unifi /unifi/var; \
-      ln -s /var/log/unifi /unifi/log;
+      ln -s /var/lib/unifi ${APP_ROOT}/var; \
+      ln -s /var/log/unifi ${APP_ROOT}/log;
 
   # :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
@@ -52,16 +53,16 @@
 
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
-      usermod -d /unifi docker; \
+      usermod -d ${APP_ROOT} docker; \
       chown -R 1000:1000 \
-        /unifi \
+        ${APP_ROOT} \
         /usr/lib/unifi \
         /var/run/unifi \
         /var/lib/unifi \
         /var/log/unifi;
 
 # :: Volumes
-  VOLUME ["/unifi/var"]
+  VOLUME ["${APP_ROOT}/var"]
 
 # :: Monitor
   HEALTHCHECK CMD /usr/local/bin/healthcheck.sh || exit 1
