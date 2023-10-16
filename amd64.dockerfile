@@ -1,7 +1,7 @@
 # :: Header
   FROM ubuntu:20.04
   ENV DEBIAN_FRONTEND=noninteractive
-  ENV APP_VERSION="7.5.176"
+  ENV APP_VERSION="7.5.187-f57f5bf7ab"
   ENV APP_ROOT="/unifi"
 
 # :: Run
@@ -22,7 +22,7 @@
     RUN set -ex; \
       apt install -y \
         mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
-        openjdk-11-jre-headless \
+        openjdk-17-jre-headless \
         binutils \
         jsvc \
         curl \
