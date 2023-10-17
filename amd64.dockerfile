@@ -29,6 +29,7 @@
         libcap2 \
         liblog4j2-java \
         tzdata \
+        gosu \
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
       ln -s /var/lib/unifi ${APP_ROOT}/var; \
