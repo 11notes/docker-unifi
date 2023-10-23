@@ -21,11 +21,17 @@ docker run --name unifi \
 | `gid` | 1000 | group id 1000 |
 | `home` | /unifi | home directory of user docker |
 
+## Environment
+| Parameter | Value | Default |
+| --- | --- | --- |
+| `TZ` | [Time Zone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) | null |
+
 ## Parent Image
 * [ubuntu:20.04](https://github.com/11notes/docker-alpine)
 
 ## Built with and thanks to
-* [Unifi](https://community.ui.com/releases)
+* [Unifi Controller](https://community.ui.com/releases)
+* [Ubuntu](https://hub.docker.com/_/ubuntu)
 
 ## Tips
 * Use reverse proxy for valid SSL certificate

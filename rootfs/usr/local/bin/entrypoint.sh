@@ -2,6 +2,7 @@
   if [ -z "$1" ]; then
     cd /usr/lib/unifi
     set -- "/usr/bin/java" \
+      -Xmx1024M \
       -Dfile.encoding=UTF-8 \
       -Djava.awt.headless=true \
       -Dapple.awt.UIElement=true \
@@ -18,8 +19,6 @@
       --add-opens java.base/sun.security.util=ALL-UNNAMED \
       --add-opens java.base/java.io=ALL-UNNAMED \
       --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED \
-      -Xmx1024M \
-      -XX:+UseParallelGC \
       -jar /usr/lib/unifi/lib/ace.jar start
   fi
 
