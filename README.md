@@ -17,8 +17,8 @@ docker run --name unifi \
 | Parameter | Value | Description |
 | --- | --- | --- |
 | `user` | docker | user docker |
-| `uid` | 1000 | user id 1000 |
-| `gid` | 1000 | group id 1000 |
+| `uid` | 1000 (99 on unraid) | user id |
+| `gid` | 1000 (100 on unraid) | group id |
 | `home` | /unifi | home directory of user docker |
 
 ## Environment
