@@ -48,7 +48,7 @@
       find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 99:100 {} \;;\
       find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 99:100 {} \;; \
       usermod -u 99 ${NOROOT_USER}; \
-      groupmod -g 100 ${NOROOT_USER}; \
+      usermod -a -G 100 ${NOROOT_USER}; \
       usermod -l docker ${NOROOT_USER}; \
       groupmod -n docker ${NOROOT_USER};
 
