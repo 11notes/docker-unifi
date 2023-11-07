@@ -9,7 +9,7 @@ Run a Unifi Controller based on Ubuntu. Big, heavy, mostly secure and a bit slow
 ## Run
 ```shell
 docker run --name unifi \
-  -v ../unifi/var:/unifi/var \
+  -v ../var:/unifi/var \
   -d 11notes/unifi:[tag]
 ```
 
