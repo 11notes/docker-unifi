@@ -1,7 +1,7 @@
 # :: Header
   FROM ubuntu:20.04
   ENV DEBIAN_FRONTEND=noninteractive
-  ENV APP_VERSION="7.5.187-f57f5bf7ab"
+  ENV APP_VERSION="8.0.7"
   ENV APP_ROOT="/unifi"
 
 # :: Run
