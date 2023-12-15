@@ -34,7 +34,8 @@
         logrotate; \
       dpkg -i /tmp/unifi.deb; \
       ln -s /var/lib/unifi ${APP_ROOT}/var; \
-      ln -s /var/log/unifi ${APP_ROOT}/log;
+      ln -s /var/log/unifi ${APP_ROOT}/log; \
+      mkdir -p ${APP_ROOT}/var/sites/default;
 
   # :: copy root filesystem changes and add execution rights to init scripts
     COPY ./rootfs /
