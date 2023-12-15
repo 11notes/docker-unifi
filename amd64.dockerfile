@@ -31,7 +31,9 @@
         liblog4j2-java \
         tzdata \
         gosu \
-        logrotate; \
+        logrotate;
+
+    RUN set -ex; \
       dpkg -i /tmp/unifi.deb; \
       ln -s /var/lib/unifi ${APP_ROOT}/var; \
       ln -s /var/log/unifi ${APP_ROOT}/log; \
