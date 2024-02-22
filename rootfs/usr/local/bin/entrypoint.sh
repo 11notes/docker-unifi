@@ -1,20 +1,23 @@
 #!/bin/sh
   DISABLE_ANONYMOUS_TELEMETRY="config.system_cfg.1=system.analytics.anonymous=disabled"
 
-  for SITE in /unifi/var/sites/*; do
+  for SITE in ${APP_ROOT}/var/sites/*; do
     if [ -d ${SITE} ]; then
       CONFIG="${SITE}/config.properties"
       if [ ! -f ${CONFIG} ]; then
         echo ${DISABLE_ANONYMOUS_TELEMETRY} > ${CONFIG}
+        elevenLogJSON info "disable telemetry for site ${SITE}"
       else
         if ! cat ${CONFIG} | grep -q 'config.system_cfg.1'; then
           echo ${DISABLE_ANONYMOUS_TELEMETRY} > ${CONFIG}
+          elevenLogJSON info "disable telemetry for site ${SITE}"
         fi
       fi
     fi
   done
 
   if [ -z "${1}" ]; then
+    elevenLogJSON info "starting unifi controller"
     cd /usr/lib/unifi
     set -- "/usr/bin/java" \
       -Xmx1024M \

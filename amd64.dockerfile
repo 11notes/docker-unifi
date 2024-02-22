@@ -1,9 +1,17 @@
+# :: Util
+  FROM alpine as util
+
+  RUN set -ex; \
+    apk add --no-cache \
+      git; \
+    git clone https://github.com/11notes/util.git;
+
 # :: Header
   FROM ubuntu:20.04
   ENV DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION="8.0.26"
-  ENV APP_ROOT="/unifi"
+  ENV APP_VERSION="8.0.28"
+  ENV APP_ROOT=/unifi
 
 # :: Run
   USER root
