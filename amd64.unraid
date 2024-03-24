@@ -8,6 +8,7 @@
 
 # :: Header
   FROM ubuntu:20.04
+  COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
   ENV DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
   ENV APP_VERSION="8.1.113"
