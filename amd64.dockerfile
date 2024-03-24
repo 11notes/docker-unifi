@@ -10,7 +10,7 @@
   FROM ubuntu:20.04
   ENV DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION="8.0.28"
+  ENV APP_VERSION="8.1.113"
   ENV APP_ROOT=/unifi
 
 # :: Run
