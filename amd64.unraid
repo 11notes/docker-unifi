@@ -11,7 +11,7 @@
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
   ENV DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION="8.1.113"
+  ENV APP_VERSION="8.1.127"
   ENV APP_ROOT=/unifi
 
 # :: Run
