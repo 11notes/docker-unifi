@@ -12,6 +12,7 @@
   ENV DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
   ENV APP_VERSION="8.1.127"
+  ARG APP_HASH="-810cd1e59a"
   ENV APP_ROOT=/unifi
 
 # :: Run
@@ -27,7 +28,7 @@
       mkdir -p ${APP_ROOT};
 
   # https://community.ui.com/RELEASES UniFi Network Application
-    ADD https://dl.ui.com/unifi/${APP_VERSION}/unifi_sysvinit_all.deb /tmp/unifi.deb
+    ADD https://dl.ui.com/unifi/${APP_VERSION}${APP_HASH}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
       apt install -y \
