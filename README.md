@@ -1,7 +1,7 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.1.127?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.1.127?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6) ![activity](https://img.shields.io/github/commit-activity/m/11notes/docker-unifi?color=c91cb8) ![commit-last](https://img.shields.io/github/last-commit/11notes/docker-unifi?color=c91cb8) ![stars](https://img.shields.io/docker/stars/11notes/unifi?color=e6a50e)
+![size](https://img.shields.io/docker/image-size/11notes/unifi/8.2.93?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.2.93?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6) ![activity](https://img.shields.io/github/commit-activity/m/11notes/docker-unifi?color=c91cb8) ![commit-last](https://img.shields.io/github/last-commit/11notes/docker-unifi?color=c91cb8) ![stars](https://img.shields.io/docker/stars/11notes/unifi?color=e6a50e)
 
 **Run Unifi Controller (DB included)**
 
@@ -40,7 +40,6 @@ docker run --name unifi \
 * [ubuntu](https://alpinelinux.org)
 
 # TIPS
-* Only use rootless container runtime (podman, rootless docker)
 * Allow non-root ports < 1024 via `echo "net.ipv4.ip_unprivileged_port_start=53" > /etc/sysctl.d/ports.conf`
 * Use a reverse proxy like Traefik, Nginx to terminate TLS with a valid certificate
 * Use Let’s Encrypt certificates to protect your SSL endpoints
