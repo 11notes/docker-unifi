@@ -4,8 +4,7 @@ on:
   push:
     tags:
       - "*"
-      - "!amd64*"
-      - "!arm64*"
+      - "!*unraid"
 
 permissions:
   contents: write
