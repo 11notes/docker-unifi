@@ -1,7 +1,7 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.3.32?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.3.32?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6) ![stars](https://img.shields.io/docker/stars/11notes/unifi?color=e6a50e) [<img src="https://img.shields.io/badge/github-11notes-blue?logo=github">](https://github.com/11notes)
+![size](https://img.shields.io/docker/image-size/11notes/unifi/8.4.59?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.4.59?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6) ![stars](https://img.shields.io/docker/stars/11notes/unifi?color=e6a50e) [<img src="https://img.shields.io/badge/github-11notes-blue?logo=github">](https://github.com/11notes)
 
 **Run Unifi Controller (DB included)**
 
@@ -11,11 +11,31 @@ What can I do with this? This image will provide you a rock solid<sup>1</sup> Un
 # VOLUMES
 * **/unifi/var** - Directory of all configuration data and sites
 
-# RUN
-```shell
-docker run --name unifi \
-  -v .../var:/unifi/var \
-  -d 11notes/unifi:[tag]
+# COMPOSE
+```yaml
+services:
+  unifi:
+    image: "11notes/unifi:8.4.59"
+    container_name: "unifi"
+    environment:
+      TZ: Europe/Zurich
+    volumes:
+      - "var:/unifi/var"
+    networks:
+      macvlan:
+        ipv4_address: 10.255.255.1
+    restart: always
+volumes:
+  var:
+networks:
+  macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: "10.255.255.0/24"
+          gateway: "10.255.255.254"
 ```
 
 # DEFAULT SETTINGS
@@ -40,7 +60,6 @@ docker run --name unifi \
 * [ubuntu](https://alpinelinux.org)
 
 # TIPS
-* Allow non-root ports < 1024 via `echo "net.ipv4.ip_unprivileged_port_start={n}" > /etc/sysctl.d/ports.conf`
 * Use a reverse proxy like Traefik, Nginx to terminate TLS with a valid certificate
 * Use Let’s Encrypt certificates to protect your SSL endpoints
 
