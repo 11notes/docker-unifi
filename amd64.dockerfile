@@ -9,10 +9,10 @@
 # :: Header
   FROM ubuntu:20.04
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
-  ENV DEBIAN_FRONTEND=noninteractive
+  ARG APP_RC="-i3q2j125cz"
+  ARG DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION="8.4.59"
-  ARG APP_HASH="-y2b2oj1o96"
+  ENV APP_VERSION=8.4.62
   ENV APP_ROOT=/unifi
 
 # :: Run
@@ -28,7 +28,7 @@
       mkdir -p ${APP_ROOT};
 
   # https://community.ui.com/RELEASES UniFi Network Application
-    ADD https://dl.ui.com/unifi/${APP_VERSION}${APP_HASH}/unifi_sysvinit_all.deb /tmp/unifi.deb
+    ADD https://dl.ui.com/unifi/${APP_VERSION}${APP_RC}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
       apt install -y \

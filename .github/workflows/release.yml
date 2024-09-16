@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - "*"
-      - "!*unraid"
+      - "!unraid"
 
 permissions:
   contents: write
