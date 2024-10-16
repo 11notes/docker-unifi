@@ -1,7 +1,7 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.4.62?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.4.62?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6) ![stars](https://img.shields.io/docker/stars/11notes/unifi?color=e6a50e) [<img src="https://img.shields.io/badge/github-11notes-blue?logo=github">](https://github.com/11notes)
+![size](https://img.shields.io/docker/image-size/11notes/unifi/8.5.6?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.5.6?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
 
 **Run Unifi Controller (DB included)**
 
@@ -15,7 +15,7 @@ What can I do with this? This image will provide you a rock solid<sup>1</sup> Un
 ```yaml
 services:
   unifi:
-    image: "11notes/unifi:8.4.62"
+    image: "11notes/unifi:8.5.6"
     container_name: "unifi"
     environment:
       TZ: Europe/Zurich
@@ -53,7 +53,7 @@ networks:
 | `DEBUG` | Show debug information | |
 
 # SOURCE
-* [11notes/unifi](https://github.com/11notes/docker-unifi)
+* [11notes/unifi:8.5.6](https://github.com/11notes/docker-unifi/tree/8.5.6)
 
 # PARENT IMAGE
 * [ubuntu:20.04](https://hub.docker.com/_/ubuntu)
