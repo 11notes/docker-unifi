@@ -9,10 +9,10 @@
 # :: Header
   FROM ubuntu:20.04
   COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
-  ARG APP_RC="-1x29lm155t"
+  ARG APP_RC="-rj47uhde42"
   ARG DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION=8.5.6
+  ENV APP_VERSION=8.6.3
   ENV APP_ROOT=/unifi
 
 # :: Run

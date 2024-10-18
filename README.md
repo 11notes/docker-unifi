@@ -1,7 +1,7 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.5.6?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.5.6?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
+![size](https://img.shields.io/docker/image-size/11notes/unifi/8.6.3?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.6.3?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
 
 **Run Unifi Controller (DB included)**
 
@@ -53,7 +53,7 @@ networks:
 | `DEBUG` | Show debug information | |
 
 # SOURCE
-* [11notes/unifi:8.5.6](https://github.com/11notes/docker-unifi/tree/8.5.6)
+* [11notes/unifi:8.6.3](https://github.com/11notes/docker-unifi/tree/8.6.3)
 
 # PARENT IMAGE
 * [ubuntu:20.04](https://hub.docker.com/_/ubuntu)

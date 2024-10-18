@@ -1,6 +1,6 @@
 services:
   unifi:
-    image: "11notes/unifi:8.5.6"
+    image: "11notes/unifi:8.6.3"
     container_name: "unifi"
     environment:
       TZ: Europe/Zurich
