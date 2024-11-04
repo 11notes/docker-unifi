@@ -8,11 +8,11 @@
 
 # :: Header
   FROM ubuntu:20.04
-  COPY --from=util /util/linux/shell/elevenLogJSON /usr/local/bin
-  ARG APP_RC="-rj47uhde42"
+  COPY --from=util /util/docker /usr/local/bin
+  ARG APP_RC="-0f45j609pu"
   ARG DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION=8.6.3
+  ENV APP_VERSION=8.6.9
   ENV APP_ROOT=/unifi
 
 # :: Run

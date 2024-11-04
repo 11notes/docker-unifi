@@ -1,12 +1,12 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.6.3?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.6.3?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
+![size](https://img.shields.io/docker/image-size/11notes/unifi/8.6.9?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.6.9?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
 
 **Run Unifi Controller (DB included)**
 
 # SYNOPSIS
-What can I do with this? This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
+**What can I do with this?** This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
 
 # VOLUMES
 * **/unifi/var** - Directory of all configuration data and sites
@@ -15,7 +15,7 @@ What can I do with this? This image will provide you a rock solid<sup>1</sup> Un
 ```yaml
 services:
   unifi:
-    image: "11notes/unifi:8.5.6"
+    image: "11notes/unifi:8.6.9"
     container_name: "unifi"
     environment:
       TZ: Europe/Zurich
@@ -53,7 +53,7 @@ networks:
 | `DEBUG` | Show debug information | |
 
 # SOURCE
-* [11notes/unifi:8.6.3](https://github.com/11notes/docker-unifi/tree/8.6.3)
+* [11notes/unifi:8.6.9](https://github.com/11notes/docker-unifi/tree/8.6.9)
 
 # PARENT IMAGE
 * [ubuntu:20.04](https://hub.docker.com/_/ubuntu)
