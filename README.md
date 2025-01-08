@@ -1,7 +1,7 @@
 ![Banner](https://github.com/11notes/defaults/blob/main/static/img/banner.png?raw=true)
 
 # 🍟 Ubuntu - unifi
-![size](https://img.shields.io/docker/image-size/11notes/unifi/8.6.9?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/8.6.9?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
+[<img src="https://img.shields.io/badge/github-source-blue?logo=github">](https://github.com/11notes/docker-unifi/tree/9.0.108) ![size](https://img.shields.io/docker/image-size/11notes/unifi/9.0.108?color=0eb305) ![version](https://img.shields.io/docker/v/11notes/unifi/9.0.108?color=eb7a09) ![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)
 
 **Run Unifi Controller (DB included)**
 
@@ -53,7 +53,7 @@ networks:
 | `DEBUG` | Show debug information | |
 
 # SOURCE
-* [11notes/unifi:8.6.9](https://github.com/11notes/docker-unifi/tree/8.6.9)
+* [11notes/unifi:9.0.108](https://github.com/11notes/docker-unifi/tree/9.0.108)
 
 # PARENT IMAGE
 * [ubuntu:20.04](https://hub.docker.com/_/ubuntu)
@@ -70,5 +70,4 @@ networks:
 * <sup>1</sup> This image will automatically disable anonymous telemetry collected by Ubiquiti by adding a flag (`config.system_cfg.1=system.analytics.anonymous=disabled`) to each sites `config.properties`. You will still have to disable telemetry in the global settings too, to disable *all* telemetry. You can check your telemetry status by SSH’ing into an access point and checking ` grep analytics /tmp/system.cfg`, the output should read `disabled`. Make sure to also DNS block the FQDN `trace.svc.ui.com` in your DNS blocker.
 
 # ElevenNotes<sup>™️</sup>
-This image is provided to you at your own risk. Always make backups before updating an image to a new version. Check the changelog for breaking changes. You can find all my repositories on [github](https://github.com/11notes).
-    
+This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [RELEASE.md](https://github.com/11notes/docker-unifi/blob/9.0.108/RELEASE.md) for breaking changes. You can find all my repositories on [github](https://github.com/11notes).

@@ -9,10 +9,10 @@
 # :: Header
   FROM ubuntu:20.04
   COPY --from=util /util/docker /usr/local/bin
-  ARG APP_RC="-0f45j609pu"
+  ARG APP_RC="-u598f2io2a"
   ARG DEBIAN_FRONTEND=noninteractive
   ENV APP_NAME="unifi"
-  ENV APP_VERSION=8.6.9
+  ENV APP_VERSION=9.0.108
   ENV APP_ROOT=/unifi
 
 # :: Run
