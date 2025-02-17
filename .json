@@ -14,5 +14,9 @@
     "parent":{
       "image":"ubuntu:20.04"
     }
+  },
+
+  "grype":{
+    "severity":"low"
   }
 }
