@@ -6,18 +6,17 @@
       CONFIG="${SITE}/config.properties"
       if [ ! -f ${CONFIG} ]; then
         echo ${DISABLE_ANONYMOUS_TELEMETRY} > ${CONFIG}
-        elevenLogJSON debug "disable telemetry for site ${SITE}"
+        eleven log info "disable telemetry for site ${SITE}"
       else
         if ! cat ${CONFIG} | grep -q 'config.system_cfg.1'; then
           echo ${DISABLE_ANONYMOUS_TELEMETRY} > ${CONFIG}
-          elevenLogJSON debug "disable telemetry for site ${SITE}"
+          eleven log info "disable telemetry for site ${SITE}"
         fi
       fi
     fi
   done
 
   if [ -z "${1}" ]; then
-    elevenLogJSON info "starting ${APP_NAME} (${APP_VERSION})"
     cd /usr/lib/unifi
     set -- "/usr/bin/java" \
       -Xmx1024M \
@@ -38,6 +37,8 @@
       --add-opens java.base/java.io=ALL-UNNAMED \
       --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED \
       -jar /usr/lib/unifi/lib/ace.jar start
+      
+    eleven log start
   fi
 
   exec "$@"

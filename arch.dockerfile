@@ -1,33 +1,43 @@
 # :: Util
-  FROM alpine as util
-
-  RUN set -ex; \
-    apk add --no-cache \
-      git; \
-    git clone https://github.com/11notes/util.git;
+  FROM 11notes/util AS util
 
 # :: Header
   FROM ubuntu:20.04
-  COPY --from=util /util/docker /usr/local/bin
-  ARG APP_RC="-k5dy363g65"
-  ARG DEBIAN_FRONTEND=noninteractive
-  ENV APP_NAME="unifi"
-  ENV APP_VERSION=9.0.114
-  ENV APP_ROOT=/unifi
+
+  # :: arguments
+    ARG TARGETARCH
+    ARG APP_IMAGE
+    ARG APP_NAME
+    ARG APP_VERSION
+    ARG APP_ROOT
+    ARG APP_UID
+    ARG APP_GID
+    ARG APP_RC
+    
+    ARG DEBIAN_FRONTEND=noninteractive
+
+  # :: environment
+    ENV APP_IMAGE=${APP_IMAGE}
+    ENV APP_NAME=${APP_NAME}
+    ENV APP_VERSION=${APP_VERSION}
+    ENV APP_ROOT=${APP_ROOT}
+
+  # :: multi-stage
+    COPY --from=util /usr/local/bin/ /usr/local/bin
 
 # :: Run
   USER root
+  RUN eleven printenv;
 
   # :: update image
     RUN set -ex; \
       apt update -y; \
       apt upgrade -y;
 
-  # :: prepare image
+  # :: install application
     RUN set -ex; \
       mkdir -p ${APP_ROOT};
 
-  # https://community.ui.com/RELEASES UniFi Network Application
     ADD https://dl.ui.com/unifi/${APP_VERSION}${APP_RC}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
@@ -47,40 +57,37 @@
       dpkg -i /tmp/unifi.deb; \
       ln -s /var/lib/unifi ${APP_ROOT}/var; \
       ln -s /var/log/unifi ${APP_ROOT}/log; \
-      mkdir -p ${APP_ROOT}/var/sites/default;
+      mkdir -p ${APP_ROOT}/var/sites/default; \
+      rm -rf /tmp/unifi.deb;
 
-  # :: copy root filesystem changes and add execution rights to init scripts
+  # :: copy filesystem changes and set correct permissions
     COPY ./rootfs /
     RUN set -ex; \
-      chmod +x -R /usr/local/bin
+      chmod +x -R /usr/local/bin;
 
-  # :: set uid/gid to 99:100 for existing user
+  # :: change uid/gid
     RUN set -ex; \
-      NOROOT_USER="unifi" \
-      NOROOT_UID="$(id -u ${NOROOT_USER})"; \
-      NOROOT_GID="$(id -g ${NOROOT_USER})"; \
-      find / -not -path "/proc/*" -user ${NOROOT_UID} -exec chown -h -R 99:100 {} \;;\
-      find / -not -path "/proc/*" -group ${NOROOT_GID} -exec chown -h -R 99:100 {} \;; \
-      usermod -u 99 ${NOROOT_USER}; \
-      usermod -a -G 100 ${NOROOT_USER}; \
-      usermod -l docker ${NOROOT_USER}; \
-      groupmod -n docker ${NOROOT_USER};
+      eleven changeUserToDocker unifi
 
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
       usermod -d ${APP_ROOT} docker; \
-      chown -R 99:100 \
+      chown -R 1000:1000 \
         ${APP_ROOT} \
         /usr/lib/unifi \
         /var/run/unifi \
         /var/lib/unifi \
         /var/log/unifi;
 
+  # :: support unraid
+    RUN set -ex; \
+      eleven unraid;
+
 # :: Volumes
   VOLUME ["${APP_ROOT}/var"]
 
 # :: Monitor
-  HEALTHCHECK CMD /usr/local/bin/healthcheck.sh || exit 1
+  HEALTHCHECK --interval=5s --timeout=2s CMD curl -X GET -kILs --fail https://localhost:8443 || exit 1
 
 # :: Start
   USER docker

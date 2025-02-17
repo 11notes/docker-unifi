@@ -1,0 +1,18 @@
+{
+  "image":"11notes/unifi",
+  "name":"unifi",
+  "root":"/unifi",
+  
+  "semver":{
+    "version":"9.0.114",
+    "rc":"-k5dy363g65",
+    "latest":"9.0.114"
+  },
+
+  "readme":{
+    "description":"Unifi Controller (DB included)",
+    "parent":{
+      "image":"ubuntu:20.04"
+    }
+  }
+}

@@ -1,0 +1,228 @@
+name: docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'set WORKFLOW_GITHUB_RELEASE'
+        required: false
+        default: 'false'
+
+      image:
+        description: 'set IMAGE'
+        required: false
+
+      uid:
+        description: 'set IMAGE_UID'
+        required: false
+
+      gid:
+        description: 'set IMAGE_GID'
+        required: false
+
+      semverprefix:
+        description: 'prefix for semver tags'
+        required: false
+
+      semversuffix:
+        description: 'suffix for semver tags'
+        required: false
+
+jobs:
+  docker:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: write
+      packages: write
+      security-events: write
+
+    steps:   
+      - name: init / checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: init / inputs to env
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          cat << 'EOF' > .inputs
+          ${{ toJSON(github.event.inputs) }}
+          EOF
+          for KEY in $(cat .inputs | jq --raw-output 'keys[]' | tr '\n' ' '); do echo "input_$(echo ${KEY} | tr '[:upper:]' '[:lower:]')=$(cat .inputs | jq --raw-output '.'${KEY}'')" >> $GITHUB_ENV; done
+
+      - name: init / .json to env
+        uses: rgarcia-phi/json-to-variables@9835d537368468c4e4de5254dc3efeadda183793
+        with:
+          filename: '.json'
+
+      - name: init / setup environment
+        run: |
+          : # set image
+          LOCAL_IMAGE=${json_image}
+          if [ ! -z ${input_image} ]; then LOCAL_IMAGE=${input_image}; fi
+          echo "IMAGE=${LOCAL_IMAGE}" >> $GITHUB_ENV
+
+          : # set defaults
+          echo "IMAGE_ARCH=${json_arch:-linux/amd64,linux/arm64}" >> $GITHUB_ENV
+          echo "WORKFLOW_GRYPE_SEVERITY_CUTOFF=${json_grype_severity:-high}" >> $GITHUB_ENV;
+          echo "WORKFLOW_GITHUB_RELEASE=${input_release:-true}" >> $GITHUB_ENV;
+
+          : # create tags for semver, stable and other shenanigans
+          LOCAL_SHA=$(git rev-parse --short HEAD)
+          LOCAL_SEMVER_MAJOR=$(awk -F. '{ print $1 }' <<< ${json_semver_version})
+          LOCAL_SEMVER_MINOR=$(awk -F. '{ print $2 }' <<< ${json_semver_version})
+          LOCAL_SEMVER_PATCH=$(awk -F. '{ print $3 }' <<< ${json_semver_version})
+          LOCAL_SEMVER_PREFIX=""
+          LOCAL_SEMVER_SUFFIX=""
+          LOCAL_SEMVER_RC=""
+          LOCAL_TAGS="${LOCAL_IMAGE}:${LOCAL_SHA}"
+          if [ ! -z ${input_semverprefix} ]; then LOCAL_SEMVER_PREFIX="${input_semverprefix}-"; fi
+          if [ ! -z ${input_semversuffix} ]; then LOCAL_SEMVER_SUFFIX="-${input_semversuffix}"; fi
+          if [ ! -z ${json_semver_rc} ]; then LOCAL_SEMVER_RC="${json_semver_rc}"; fi
+          if [ ! -z ${LOCAL_SEMVER_MAJOR} ]; then LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}${LOCAL_SEMVER_MAJOR}${LOCAL_SEMVER_SUFFIX}"; fi
+          if [ ! -z ${LOCAL_SEMVER_MINOR} ]; then LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}${LOCAL_SEMVER_MAJOR}.${LOCAL_SEMVER_MINOR}${LOCAL_SEMVER_SUFFIX}"; fi
+          if [ ! -z ${LOCAL_SEMVER_PATCH} ]; then LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}${LOCAL_SEMVER_MAJOR}.${LOCAL_SEMVER_MINOR}.${LOCAL_SEMVER_PATCH}${LOCAL_SEMVER_SUFFIX}"; fi
+          if echo "${LOCAL_TAGS}" | grep -q "${json_semver_stable}" ; then LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}stable${LOCAL_SEMVER_SUFFIX}"; fi
+          if echo "${LOCAL_TAGS}" | grep -q "${json_semver_latest}" ; then LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}latest${LOCAL_SEMVER_SUFFIX}"; fi
+          if [ ! -z ${json_semver_tags} ]; then SPECIAL_LOCAL_TAGS=$(echo ${json_semver_tags} | sed 's/,/ /g'); for LOCAL_TAG in ${json_semver_tags}; do LOCAL_TAGS="${LOCAL_TAGS},${LOCAL_IMAGE}:${LOCAL_SEMVER_PREFIX}${LOCAL_TAG}${LOCAL_SEMVER_SUFFIX}"; done; fi
+          echo "IMAGE_TAGS=${LOCAL_TAGS}" >> $GITHUB_ENV
+
+          : # if for whatever reason UID/GID must be changed at build time
+          if [ ! -z ${input_uid} ]; then echo "IMAGE_UID=${input_uid}" >> $GITHUB_ENV; else echo "IMAGE_UID=${json_uid:-1000}" >> $GITHUB_ENV; fi
+          if [ ! -z ${input_gid} ]; then echo "IMAGE_GID=${input_gid}" >> $GITHUB_ENV; else echo "IMAGE_GID=${json_gid:-1000}" >> $GITHUB_ENV; fi
+
+          : # set rc, prefix or suffix globally
+          echo "IMAGE_SEMVER_PREFIX=${LOCAL_SEMVER_PREFIX}" >> $GITHUB_ENV
+          echo "IMAGE_SEMVER_SUFFIX=${LOCAL_SEMVER_SUFFIX}" >> $GITHUB_ENV
+          echo "IMAGE_VERSION_RC=${LOCAL_SEMVER_RC}" >> $GITHUB_ENV
+
+      - name: docker / login to hub
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
+        with:
+          username: 11notes
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: docker / setup qemu
+        uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a
+
+      - name: docker / setup buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5
+
+      - name: grype / build & push & tag
+        id: grype-tag
+        uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d
+        with:
+          context: .
+          file: arch.dockerfile
+          push: true
+          platforms: ${{ env.IMAGE_ARCH }}
+          cache-from: type=registry,ref=${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}buildcache${{ env.IMAGE_SEMVER_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}buildcache${{ env.IMAGE_SEMVER_SUFFIX }},mode=max,compression=zstd,force-compression=true
+          build-args: |
+            APP_IMAGE=${{ env.IMAGE }}
+            APP_NAME=${{ env.json_name }}
+            APP_VERSION=${{ env.json_semver_version }}
+            APP_ROOT=${{ env.json_root }}
+            APP_UID=${{ env.IMAGE_UID }}
+            APP_GID=${{ env.IMAGE_GID }}
+            APP_VERSION_PREFIX=${{ env.IMAGE_SEMVER_PREFIX }}
+            APP_VERSION_SUFFIX=${{ env.IMAGE_SEMVER_SUFFIX }}
+            APP_VERSION_RC=${{ env.IMAGE_VERSION_RC }}
+            APP_NO_CACHE=$(date +%s)
+          tags: |
+            ${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}grype${{ env.IMAGE_SEMVER_SUFFIX }}
+
+      - name: grype / scan
+        id: grype-scan
+        uses: anchore/scan-action@abae793926ec39a78ab18002bc7fc45bbbd94342
+        with:
+          image: ${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}grype${{ env.IMAGE_SEMVER_SUFFIX }}
+          severity-cutoff: ${{ env.WORKFLOW_GRYPE_SEVERITY_CUTOFF }}
+          by-cve: true
+          output-format: 'sarif'
+          output-file: ${{ runner.temp }}/_github_home/grype.sarif
+
+      - name: grype / report / sarif to markdown
+        id: sarif-to-md
+        if: success() || failure()
+        continue-on-error: true
+        uses: 11notes/action-sarif-to-markdown@bc689850bd33a1037ea1d0a609ab4ea14b3c4396
+        with:
+          sarif_file: grype.sarif
+
+      - name: grype / delete tag
+        if: steps.grype-tag.outcome == 'success'
+        run: |
+          curl --request DELETE \
+            --url https://hub.docker.com/v2/repositories/${{ env.IMAGE }}/tags/${{ env.IMAGE_SEMVER_PREFIX }}grype${{ env.IMAGE_SEMVER_SUFFIX }}/ \
+            --header 'authorization: jwt ${{ secrets.DOCKER_TOKEN }}' \
+            --header 'content-type: application/json' \
+            --fail
+
+      - name: codeql / upload
+        id: codeql-upload
+        if: steps.grype-scan.outcome == 'success'
+        uses: github/codeql-action/upload-sarif@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169
+        with:
+          sarif_file: ${{ steps.grype-scan.outputs.sarif }}
+          wait-for-processing: false
+          category: grype
+
+      - name: docker / build & push
+        uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d
+        with:
+          context: .
+          file: arch.dockerfile
+          push: true
+          sbom: true
+          provenance: mode=max
+          platforms: ${{ env.IMAGE_ARCH }}
+          cache-from: type=registry,ref=${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}buildcache${{ env.IMAGE_SEMVER_SUFFIX }}
+          cache-to: type=registry,ref=${{ env.IMAGE }}:${{ env.IMAGE_SEMVER_PREFIX }}buildcache${{ env.IMAGE_SEMVER_SUFFIX }},mode=max,compression=zstd,force-compression=true
+          build-args: |
+            APP_IMAGE=${{ env.IMAGE }}
+            APP_NAME=${{ env.json_name }}
+            APP_VERSION=${{ env.json_semver_version }}
+            APP_ROOT=${{ env.json_root }}
+            APP_UID=${{ env.IMAGE_UID }}
+            APP_GID=${{ env.IMAGE_GID }}
+            APP_VERSION_PREFIX=${{ env.IMAGE_SEMVER_PREFIX }}
+            APP_VERSION_SUFFIX=${{ env.IMAGE_SEMVER_SUFFIX }}
+            APP_VERSION_RC=${{ env.IMAGE_VERSION_RC }}
+            APP_NO_CACHE=$(date +%s)
+          tags: |
+            ${{ env.IMAGE_TAGS }}
+
+      - name: github / create release notes
+        if: env.WORKFLOW_GITHUB_RELEASE == 'true' && hashFiles('RELEASE.md') != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} -F RELEASE.md
+
+      - name: github / update description and set repo defaults
+        run: |
+          curl --request PATCH \
+            --url https://api.github.com/repos/${{ github.repository }} \
+            --header 'authorization: Bearer ${{ secrets.REPOSITORY_TOKEN }}' \
+            --header 'content-type: application/json' \
+            --data '{
+              "description":"${{ env.json_readme_description }}",
+              "homepage":"",
+              "has_issues":true,
+              "has_discussions":true,
+              "has_projects":false,
+              "has_wiki":false
+            }' \
+            --fail
+
+      - name: docker / push README.md to docker hub
+        if: hashFiles('README.md') != ''
+        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8
+        env:
+          DOCKER_USER: 11notes
+          DOCKER_PASS: ${{ secrets.DOCKER_TOKEN }}
+        with:
+          destination_container_repo: ${{ env.IMAGE }}
+          provider: dockerhub
+          short_description: ${{ env.json_readme_description }}
+          readme_file: 'README.md'

@@ -1,22 +1,24 @@
 services:
   unifi:
-    image: "11notes/unifi:9.0.108"
+    image: "11notes/unifi:9.0.114"
     container_name: "unifi"
     environment:
-      TZ: Europe/Zurich
+      TZ: "Europe/Zurich"
     volumes:
       - "var:/unifi/var"
     networks:
       macvlan:
         ipv4_address: 10.255.255.1
     restart: always
+
 volumes:
   var:
+  
 networks:
   macvlan:
-    driver: macvlan
+    driver: "macvlan"
     driver_opts:
-      parent: eth0
+      parent: "eth0"
     ipam:
       config:
         - subnet: "10.255.255.0/24"
