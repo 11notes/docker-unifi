@@ -1,3 +1,6 @@
+ARG APP_UID=1000
+ARG APP_GID=1000
+
 # :: Util
   FROM 11notes/util AS util
 
@@ -12,8 +15,6 @@
     ARG APP_ROOT
     ARG APP_UID
     ARG APP_GID
-    ARG APP_RC
-    
     ARG DEBIAN_FRONTEND=noninteractive
 
   # :: environment
@@ -38,7 +39,7 @@
     RUN set -ex; \
       mkdir -p ${APP_ROOT};
 
-    ADD https://dl.ui.com/unifi/${APP_VERSION}${APP_RC}/unifi_sysvinit_all.deb /tmp/unifi.deb
+    ADD https://dl.ui.com/unifi/${APP_VERSION}/unifi_sysvinit_all.deb /tmp/unifi.deb
 
     RUN set -ex; \
       apt install -y \
@@ -72,7 +73,7 @@
   # :: change home path for existing user and set correct permission
     RUN set -ex; \
       usermod -d ${APP_ROOT} docker; \
-      chown -R 1000:1000 \
+      chown -R ${APP_UID}:${APP_GID} \
         ${APP_ROOT} \
         /usr/lib/unifi \
         /var/run/unifi \
@@ -87,8 +88,8 @@
   VOLUME ["${APP_ROOT}/var"]
 
 # :: Monitor
-  HEALTHCHECK --interval=5s --timeout=2s CMD curl -X GET -kILs --fail https://localhost:8443 || exit 1
+  HEALTHCHECK --interval=5s --timeout=2s CMD curl -kILs --fail https://localhost:8443
 
 # :: Start
-  USER docker
+  USER ${APP_UID}:${APP_GID}
   ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

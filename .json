@@ -5,7 +5,6 @@
   
   "semver":{
     "version":"9.0.114",
-    "rc":"-k5dy363g65",
     "latest":"9.0.114"
   },
 
@@ -13,6 +12,12 @@
     "description":"Unifi Controller (DB included)",
     "parent":{
       "image":"ubuntu:20.04"
+    },
+    "built":{
+      "py-kms":"https://github.com/Py-KMS-Organization/py-kms"
+    },
+    "comparison":{
+      "image":"linuxserver/unifi-network-application:9.0.114"
     }
   },
 
