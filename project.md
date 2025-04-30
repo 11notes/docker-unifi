@@ -6,6 +6,7 @@ ${{ github:> [!IMPORTANT] }}
 ${{ github:> }}* This image runs as 1000:1000 by default, most other images run everything as root
 ${{ github:> }}* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
 ${{ github:> }}* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
+${{ github:> }}* This image has an auto update feature that will automatically build the latest version if released, most other image providers do this too slow
 
 If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
 
