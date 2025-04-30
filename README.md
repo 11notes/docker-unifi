@@ -24,7 +24,7 @@ Below you find a comparison between this image and the most used or original one
 
 | **image** | 11notes/unifi:9.1.120 | linuxserver/unifi-network-application:9.1.120 |
 | ---: | :---: | :---: |
-| **image size on disk** | ? | ? |
+| **image size on disk** | 1.28GB | no image found (provider too slow ...) |
 | **process UID/GID** | 1000/1000 | ?/? |
 | **distroless?** | ❌ | ❌ |
 | **rootless?** | ✅ | ❌ |
@@ -112,4 +112,4 @@ This image supports unraid by default. Simply add **-unraid** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 30.04.2025, 23:17:57 (CET)*
+*created 30.04.2025, 23:24:21 (CET)*
