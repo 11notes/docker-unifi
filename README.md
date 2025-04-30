@@ -9,9 +9,7 @@ Unifi Controller (DB included)
 These are the main tags for the image. There is also a tag for each commit and its shorthand sha256 value.
 
 * [9.1.120](https://hub.docker.com/r/11notes/unifi/tags?name=9.1.120)
-* [latest](https://hub.docker.com/r/11notes/unifi/tags?name=latest)
 * [9.1.120-unraid](https://hub.docker.com/r/11notes/unifi/tags?name=9.1.120-unraid)
-* [latest-unraid](https://hub.docker.com/r/11notes/unifi/tags?name=latest-unraid)
 
 # REPOSITORIES ☁️
 ```
@@ -99,7 +97,7 @@ networks:
 * [ubuntu:20.04](https://hub.docker.com/_/ubuntu)
 
 # BUILT WITH 🧰
-* [py-kms](https://github.com/Py-KMS-Organization/py-kms)
+* [unifi](https://community.ui.com/releases/r/network/9.1.120)
 * [11notes/util](https://github.com/11notes/docker-util)
 
 # GENERAL TIPS 📌
@@ -143,4 +141,4 @@ networks:
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 29.04.2025, 15:36:23 (CET)*
+*created 30.04.2025, 07:16:26 (CET)*
