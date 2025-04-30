@@ -73,7 +73,9 @@ jobs:
             if(latest.match(/\d+\.\d+\.\d+/i) && latest !== repository.dot.semver.version){
               core.info(`found newer version ${latest}`);
               repository.dot.semver.version = latest.split('.').slice(0,3).join('.');
-              repository.dot.semver.latest = repository.dot.semver.version;
+              if(repository.dot.semver?.latest){
+                repository.dot.semver.latest = repository.dot.semver.version;
+              }
               if(repository.dot?.readme?.comparison?.image){
                 repository.dot.readme.comparison.image = repository.dot.readme.comparison.image.replace(current , repository.dot.semver.version);
               }

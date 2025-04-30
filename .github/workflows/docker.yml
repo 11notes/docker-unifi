@@ -16,6 +16,11 @@ on:
         required: false
         default: 'ubuntu-22.04'
 
+      build:
+        description: 'set WORKFLOW_BUILD'
+        required: false
+        default: 'true'
+
       release:
         description: 'set WORKFLOW_GITHUB_RELEASE'
         required: false
@@ -175,6 +180,7 @@ jobs:
               core.exportVariable('DOCKER_IMAGE_ARGUMENTS', arguments.join("\r\n"));
               core.exportVariable('DOCKER_IMAGE_DOCKERFILE', opt.input?.etc?.dockerfile || 'arch.dockerfile');
 
+              core.exportVariable('WORKFLOW_BUILD', (opt.input?.build === undefined) ? false : opt.input.build);
               core.exportVariable('WORKFLOW_CREATE_RELEASE', (opt.input?.release === undefined) ? false : opt.input.release);
               core.exportVariable('WORKFLOW_CREATE_README', (opt.input?.readme === undefined) ? false : opt.input.readme);
               core.exportVariable('WORKFLOW_GRYPE_FAIL_ON_SEVERITY', (opt.dot?.grype?.fail === undefined) ? true : opt.dot.grype.fail);
@@ -209,14 +215,17 @@ jobs:
           password: ${{ secrets.QUAY_TOKEN }}
 
       - name: docker / setup qemu
+        if: env.WORKFLOW_BUILD == 'true'
         uses: docker/setup-qemu-action@53851d14592bedcffcf25ea515637cff71ef929a
 
       - name: docker / setup buildx
+        if: env.WORKFLOW_BUILD == 'true'
         uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5
         with:
           driver-opts: network=host
 
       - name: docker / build & push & tag grype
+        if: env.WORKFLOW_BUILD == 'true'
         id: docker-build
         uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d
         with:
@@ -232,6 +241,7 @@ jobs:
             ${{ env.DOCKER_CACHE_GRYPE }}
 
       - name: grype / scan
+        if: env.WORKFLOW_BUILD == 'true'
         id: grype
         uses: anchore/scan-action@dc6246fcaf83ae86fcc6010b9824c30d7320729e
         with:
@@ -243,7 +253,7 @@ jobs:
           cache-db: true
 
       - name: grype / fail
-        if: failure() || steps.grype.outcome == 'failure'
+        if: env.WORKFLOW_BUILD == 'true' && (failure() || steps.grype.outcome == 'failure')
         uses: anchore/scan-action@dc6246fcaf83ae86fcc6010b9824c30d7320729e
         with:
           image: ${{ env.DOCKER_CACHE_GRYPE }}
@@ -254,6 +264,7 @@ jobs:
           cache-db: true
 
       - name: docker / build & push
+        if: env.WORKFLOW_BUILD == 'true'
         uses: docker/build-push-action@67a2d409c0a876cbe6b11854e3e25193efe4e62d
         with:
           context: .
@@ -384,17 +395,6 @@ jobs:
           destination_container_repo: ${{ env.DOCKER_IMAGE_NAME }}
           provider: dockerhub
           short_description: ${{ env.DOCKER_IMAGE_DESCRIPTION }}
-          readme_file: 'README_NONGITHUB.md'
-
-      - name: quay / push README.md to quay
-        continue-on-error: true
-        if: steps.github-readme.outcome == 'success' && hashFiles('README_NONGITHUB.md') != ''
-        uses: christian-korneck/update-container-description-action@d36005551adeaba9698d8d67a296bd16fa91f8e8
-        env:
-          DOCKER_APIKEY: ${{ secrets.QUAY_TOKEN }}
-        with:
-          destination_container_repo: quay.io/${{ env.DOCKER_IMAGE_NAME }}
-          provider: quay
           readme_file: 'README_NONGITHUB.md'
 
       - name: github / commit & push
