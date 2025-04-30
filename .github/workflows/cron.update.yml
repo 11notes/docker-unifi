@@ -28,7 +28,6 @@ jobs:
               const res = await fetch('https://download.svc.ui.com/v1/software-downloads');
               if(res && res.status === 200){
                 const json = await res.json();
-                //const linux = [...html.matchAll(/v (\d+\.\d+\.\d+)+ \(Linux\)/ig)];
                 for(const download of json.downloads){
                   if(/debian/i.test(download.platform) && /unifi network application/i.test(download.name)){
                     core.exportVariable('LATEST_VERSION', download.version);
@@ -79,7 +78,7 @@ jobs:
                 repository.dot.readme.comparison.image = repository.dot.readme.comparison.image.replace(current , repository.dot.semver.version);
               }
               try{
-                writeFileSync(resolve('.json'), JSON.stringify(repository.dot));
+                writeFileSync(resolve('.json'), JSON.stringify(repository.dot, null, 2)));
                 core.exportVariable('WORKFLOW_AUTO_UPDATE', true);
               }catch(e){
                 core.setFailed(e);
