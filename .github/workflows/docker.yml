@@ -371,7 +371,7 @@ jobs:
       - name: github / create README.md
         id: github-readme
         continue-on-error: true
-        if: env.WORKFLOW_CREATE_README == 'true' && steps.docker-build.outcome == 'success'
+        if: env.WORKFLOW_CREATE_README == 'true'
         uses: 11notes/action-docker-readme@v1
         # WHY IS THIS ACTION NOT SHA256 PINNED? SECURITY MUCH?!?!?!
         # ---------------------------------------------------------------------------------
