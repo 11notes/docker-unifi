@@ -1,6 +1,6 @@
 services:
   unifi:
-    image: "11notes/unifi:9.3.43"
+    image: "11notes/unifi:9.3.45"
     environment:
       TZ: "Europe/Zurich"
     volumes:
