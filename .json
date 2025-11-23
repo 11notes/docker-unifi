@@ -1,1 +1,23 @@
-{"image":"11notes/unifi","name":"unifi","root":"/unifi","semver":{"version":"9.1.120"},"readme":{"description":"Unifi Controller (DB included)","parent":{"image":"ubuntu:20.04"},"built":{"unifi":"https://community.ui.com/releases/r/network/9.1.120"},"comparison":{"image":"linuxserver/unifi-network-application:9.1.120"}},"grype":{"fail":false}}
+{
+  "image": "11notes/unifi",
+  "name": "unifi",
+  "root": "/unifi",
+  "semver": {
+    "version": "9.5.21"
+  },
+  "readme": {
+    "description": "Unifi Controller (DB included)",
+    "parent": {
+      "image": "ubuntu:20.04"
+    },
+    "built": {
+      "unifi": "https://community.ui.com/releases/r/network/9.1.120"
+    },
+    "comparison": {
+      "image": "linuxserver/unifi-network-application:9.5.21"
+    }
+  },
+  "grype": {
+    "fail": false
+  }
+}
