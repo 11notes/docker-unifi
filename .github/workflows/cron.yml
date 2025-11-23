@@ -1,0 +1,58 @@
+name: cron
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 5 * * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: write
+
+    steps:
+      - name: checkout all tags
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+        with:
+          ref: 'master'
+          fetch-depth: 0
+
+      - name: get latest version
+        uses: actions/github-script@62c3794a3eb6788d9a2a72b219504732c0c9a298
+        with:
+          script: |
+            (async()=>{
+              let found = false;
+              const res = await fetch('https://download.svc.ui.com/v1/software-downloads');
+              if(res && res.status === 200){
+                const json = await res.json();
+                for(const download of json.downloads){
+                  if(/debian/i.test(download.platform) && /unifi network application/i.test(download.name)){
+                    core.exportVariable('LATEST_VERSION', download.version);
+                    core.info(`found Unifi version ${download.version}`);
+                    found = true;
+                    break;
+                  }
+                }
+              }
+
+              if(!found){
+                core.setFailed('no version for Unifi could be found!');
+              }
+            })();
+
+      - name: get last tag
+        run: |
+          export LATEST_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --max-count=1` | sed 's|v||')
+          echo "WORKFLOW_UPDATE_BASE64JSON=$(echo '{"version":"'${LATEST_VERSION}'", "tag":"'${LATEST_TAG}'"}' | base64)" >> "${GITHUB_ENV}"
+
+      - name: call org.update
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        with:
+          wait-for-completion: false
+          workflow: org.update.yml
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
