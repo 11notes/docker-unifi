@@ -10,8 +10,6 @@ ${{ github:> }}* This image has an auto update feature that will automatically b
 
 If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
 
-${{ content_comparison }}
-
 ${{ title_volumes }}
 * **${{ json_root }}/var** - Directory of all configuration data and sites
 
