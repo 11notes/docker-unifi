@@ -3,7 +3,7 @@
   "name": "unifi",
   "root": "/unifi",
   "semver": {
-    "version": "9.5.21"
+    "version": "10.0.160"
   },
   "readme": {
     "description": "run unifi rootless",
