@@ -13,15 +13,18 @@ The UniFi Network Controller is the free, central software hub for Ubiquiti's Un
 **What can I do with this?** This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
 
 # UNIQUE VALUE PROPOSITION 💶
-**Why should I run this image and not the other image(s) that already exist?** Good question! All the other images on the market that do exactly the same don’t do or offer these options:
+**Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
 
 > [!IMPORTANT]
->* This image runs as 1000:1000 by default, most other images run everything as root
->* This image is created via a secure, pinned CI/CD process and immune to upstream attacks, most other images have upstream dependencies that can be exploited
->* This image contains a proper health check that verifies the app is actually working, most other images have either no health check or only check if a port is open or ping works
->* This image has an auto update feature that will automatically build the latest version if released, most other image providers do this too slow
+>* ... this image runs [rootless](https://github.com/11notes/RTFM/blob/main/linux/container/image/rootless.md) as 1000:1000
+>* ... this image is auto updated to the latest version via CI/CD
+>* ... this image has a health check
+>* ... this image runs read-only
+>* ... this image is automatically scanned for CVEs before and after publishing
+>* ... this image is created via a secure and pinned CI/CD process
+>* ... this image is very small
 
-If you value security, simplicity and the ability to interact with the maintainer and developer of an image. Using my images is a great start in that direction.
+If you value security, simplicity and optimizations to the extreme, then this image might be for you.
 
 # VOLUMES 📁
 * **/unifi/var** - Directory of all configuration data and sites
@@ -122,4 +125,4 @@ This image supports nobody by default. Simply add **-nobody** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 10.12.2025, 22:16:43 (CET)*
+*created 10.12.2025, 22:21:22 (CET)*
