@@ -20,9 +20,7 @@ The UniFi Network Controller is the free, central software hub for Ubiquiti's Un
 >* ... this image is auto updated to the latest version via CI/CD
 >* ... this image has a health check
 >* ... this image runs read-only
->* ... this image is automatically scanned for CVEs before and after publishing
 >* ... this image is created via a secure and pinned CI/CD process
->* ... this image is very small
 
 If you value security, simplicity and optimizations to the extreme, then this image might be for you.
 
@@ -125,4 +123,4 @@ This image supports nobody by default. Simply add **-nobody** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 10.12.2025, 22:21:22 (CET)*
+*created 10.12.2025, 23:29:12 (CET)*
