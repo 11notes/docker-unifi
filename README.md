@@ -1,9 +1,13 @@
 ![banner](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/banner/README.png)
 
 # UNIFI
-![size](https://img.shields.io/badge/image_size-${{ image_size }}-green?color=%2338ad2d)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)[<img src="https://img.shields.io/github/issues/11notes/docker-unifi?color=7842f5">](https://github.com/11notes/docker-unifi/issues)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
+![size](https://img.shields.io/badge/image_size-902MB-green?color=%2338ad2d)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![pulls](https://img.shields.io/docker/pulls/11notes/unifi?color=2b75d6)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)[<img src="https://img.shields.io/github/issues/11notes/docker-unifi?color=7842f5">](https://github.com/11notes/docker-unifi/issues)![5px](https://raw.githubusercontent.com/11notes/static/refs/heads/main/img/markdown/transparent5x2px.png)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
 
-run unifi rootless
+run Unifi Controller rootless.
+
+# INTRODUCTION 📢
+
+The UniFi Network Controller is the free, central software hub for Ubiquiti's UniFi ecosystem, allowing you to discover, configure, monitor, and manage all your UniFi devices (like Access Points, Switches, Gateways) from a single, user-friendly dashboard, providing insights, performance stats, and unified control for your entire network, whether it's running on a dedicated device (Cloud Key, UDM) or installed software.
 
 # SYNOPSIS 📖
 **What can I do with this?** This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
@@ -24,30 +28,37 @@ If you value security, simplicity and the ability to interact with the maintaine
 
 # COMPOSE ✂️
 ```yaml
+name: "unifi"
+
+x-lockdown: &lockdown
+  # prevents write access to the image itself
+  read_only: true
+  # prevents any process within the container to gain more privileges
+  security_opt:
+    - "no-new-privileges=true"
+
 services:
-  unifi:
+  controller:
     image: "11notes/unifi:10.0.160"
+    <<: *lockdown
     environment:
       TZ: "Europe/Zurich"
     volumes:
-      - "var:/unifi/var"
+      - "controller.var:/unifi/var"
+    tmpfs:
+      - "/unifi/log:uid=1000,gid=1000"
+      - "/unifi/run:uid=1000,gid=1000"
+    ports:
+      - "3000:8443/tcp"
     networks:
-      macvlan:
-        ipv4_address: 10.255.255.1
+      frontend:
     restart: always
 
 volumes:
-  var:
-  
+  controller.var:
+
 networks:
-  macvlan:
-    driver: "macvlan"
-    driver_opts:
-      parent: "eth0"
-    ipam:
-      config:
-        - subnet: "10.255.255.0/24"
-          gateway: "10.255.255.254"
+  frontend:
 ```
 To find out how you can change the default UID/GID of this container image, consult the [RTFM](https://github.com/11notes/RTFM/blob/main/linux/container/image/11notes/how-to.changeUIDGID.md#change-uidgid-the-correct-way).
 
@@ -111,4 +122,4 @@ This image supports nobody by default. Simply add **-nobody** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 10.12.2025, 20:17:45 (CET)*
+*created 10.12.2025, 22:16:43 (CET)*
