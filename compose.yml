@@ -1,0 +1,31 @@
+name: "unifi"
+
+x-lockdown: &lockdown
+  # prevents write access to the image itself
+  read_only: true
+  # prevents any process within the container to gain more privileges
+  security_opt:
+    - "no-new-privileges=true"
+
+services:
+  controller:
+    image: "11notes/unifi:10.0.160"
+    <<: *lockdown
+    environment:
+      TZ: "Europe/Zurich"
+    volumes:
+      - "controller.var:/unifi/var"
+    tmpfs:
+      - "/unifi/log:uid=1000,gid=1000"
+      - "/unifi/run:uid=1000,gid=1000"
+    ports:
+      - "3000:8443/tcp"
+    networks:
+      frontend:
+    restart: always
+
+volumes:
+  controller.var:
+
+networks:
+  frontend:
