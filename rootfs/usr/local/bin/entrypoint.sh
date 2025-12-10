@@ -37,7 +37,7 @@
       --add-opens java.base/java.io=ALL-UNNAMED \
       --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED \
       -jar /usr/lib/unifi/lib/ace.jar start
-      
+
     eleven log start
   fi
 
