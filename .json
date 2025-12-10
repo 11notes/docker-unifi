@@ -1,5 +1,6 @@
 {
   "image": "11notes/unifi",
+  "platform":"amd64,arm64",
   "name": "unifi",
   "root": "/unifi",
   "semver": {
