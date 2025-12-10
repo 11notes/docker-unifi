@@ -1,95 +1,103 @@
-ARG APP_UID=1000
-ARG APP_GID=1000
+# ╔═════════════════════════════════════════════════════╗
+# ║                       SETUP                         ║
+# ╚═════════════════════════════════════════════════════╝
+# GLOBAL
+  ARG APP_UID=1000 \
+      APP_GID=1000
 
-# :: Util
+# :: FOREIGN IMAGES
   FROM 11notes/util AS util
+  FROM 11notes/distroless:localhealth AS distroless-localhealth
 
-# :: Header
-  FROM ubuntu:20.04
 
-  # :: arguments
-    ARG TARGETARCH
-    ARG APP_IMAGE
-    ARG APP_NAME
-    ARG APP_VERSION
-    ARG APP_ROOT
-    ARG APP_UID
-    ARG APP_GID
-    ARG DEBIAN_FRONTEND=noninteractive
+# ╔═════════════════════════════════════════════════════╗
+# ║                       BUILD                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: UNIFI & MONGODB
+  FROM ubuntu:20.04 AS build
+  ARG DEBIAN_FRONTEND=noninteractive \
+      APP_VERSION \
+      APP_ROOT \
+      APP_UID \
+      APP_GID
 
-  # :: environment
-    ENV APP_IMAGE=${APP_IMAGE}
-    ENV APP_NAME=${APP_NAME}
-    ENV APP_VERSION=${APP_VERSION}
-    ENV APP_ROOT=${APP_ROOT}
+  ADD https://dl.ui.com/unifi/${APP_VERSION}/unifi_sysvinit_all.deb /tmp/unifi.deb
+  COPY ./rootfs /
+  COPY --from=util / /
+
+
+  RUN set -ex; \
+    apt update -y; \
+    apt install -y \
+      mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
+      openjdk-17-jre-headless \
+      binutils \
+      jsvc \
+      curl \
+      libcap2 \
+      liblog4j2-java \
+      tzdata \
+      gosu \
+      logrotate; \
+    dpkg -i /tmp/unifi.deb; \
+    rm -rf /tmp/unifi.deb;
+
+  RUN set -ex; \
+    rm -rf /var/lib/unifi; ln -sf ${APP_ROOT}/var /var/lib/unifi; \
+    mkdir -p ${APP_ROOT}/var/sites/default; \
+    rm -rf /var/log/unifi; ln -sf ${APP_ROOT}/log /var/log/unifi; \
+    rm -rf /var/log/mongodb; ln -sf ${APP_ROOT}/log /var/log/mongodb; \
+    rm -rf /var/run/unifi; ln -sf ${APP_ROOT}/run /var/run/unifi;
+
+  RUN set -ex; \
+    eleven changeUserToDocker unifi;
+
+  RUN set -ex; \
+    rm -rf /var/log/unifi_package.log;
+
+  RUN set -ex; \
+    chmod +x -R /usr/local/bin; \
+    usermod -d ${APP_ROOT} docker; \
+    chown -R ${APP_UID}:${APP_GID} \
+      ${APP_ROOT}
+
+
+# ╔═════════════════════════════════════════════════════╗
+# ║                       IMAGE                         ║
+# ╚═════════════════════════════════════════════════════╝
+# :: HEADER
+  FROM scratch
+
+  # :: default arguments
+    ARG TARGETPLATFORM \
+        TARGETOS \
+        TARGETARCH \
+        TARGETVARIANT \
+        APP_IMAGE \
+        APP_NAME \
+        APP_VERSION \
+        APP_ROOT \
+        APP_UID \
+        APP_GID \
+        APP_NO_CACHE
+
+  # :: default environment
+    ENV APP_IMAGE=${APP_IMAGE} \
+        APP_NAME=${APP_NAME} \
+        APP_VERSION=${APP_VERSION} \
+        APP_ROOT=${APP_ROOT}
 
   # :: multi-stage
-    COPY --from=util /usr/local/bin/ /usr/local/bin
+    COPY --from=distroless-localhealth / /
+    COPY --from=build / /
 
-# :: Run
-  USER root
-  RUN eleven printenv;
-
-  # :: update image
-    RUN set -ex; \
-      apt update -y; \
-      apt upgrade -y;
-
-  # :: install application
-    RUN set -ex; \
-      mkdir -p ${APP_ROOT};
-
-    ADD https://dl.ui.com/unifi/${APP_VERSION}/unifi_sysvinit_all.deb /tmp/unifi.deb
-
-    RUN set -ex; \
-      apt install -y \
-        mongodb=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5 \
-        openjdk-17-jre-headless \
-        binutils \
-        jsvc \
-        curl \
-        libcap2 \
-        liblog4j2-java \
-        tzdata \
-        gosu \
-        logrotate;
-
-    RUN set -ex; \
-      dpkg -i /tmp/unifi.deb; \
-      ln -s /var/lib/unifi ${APP_ROOT}/var; \
-      ln -s /var/log/unifi ${APP_ROOT}/log; \
-      mkdir -p ${APP_ROOT}/var/sites/default; \
-      rm -rf /tmp/unifi.deb;
-
-  # :: copy filesystem changes and set correct permissions
-    COPY ./rootfs /
-    RUN set -ex; \
-      chmod +x -R /usr/local/bin;
-
-  # :: change uid/gid
-    RUN set -ex; \
-      eleven changeUserToDocker unifi
-
-  # :: change home path for existing user and set correct permission
-    RUN set -ex; \
-      usermod -d ${APP_ROOT} docker; \
-      chown -R ${APP_UID}:${APP_GID} \
-        ${APP_ROOT} \
-        /usr/lib/unifi \
-        /var/run/unifi \
-        /var/lib/unifi \
-        /var/log/unifi;
-
-  # :: support unraid
-    RUN set -ex; \
-      eleven unraid;
-
-# :: Volumes
+# :: PERSISTENT DATA
   VOLUME ["${APP_ROOT}/var"]
 
-# :: Monitor
-  HEALTHCHECK --interval=5s --timeout=2s CMD curl -kILs --fail https://localhost:8443
+# :: MONITORING
+  HEALTHCHECK --interval=5s --timeout=2s --start-period=5s \
+    CMD ["/usr/local/bin/localhealth", "https://127.0.0.1:8443/", "-I"]
 
-# :: Start
+# :: EXECUTE
   USER ${APP_UID}:${APP_GID}
   ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
