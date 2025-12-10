@@ -7,7 +7,8 @@
     "version": "10.0.160"
   },
   "readme": {
-    "description": "run unifi rootless",
+    "description": "run Unifi Controller rootless.",
+    "introduction": "The UniFi Network Controller is the free, central software hub for Ubiquiti's UniFi ecosystem, allowing you to discover, configure, monitor, and manage all your UniFi devices (like Access Points, Switches, Gateways) from a single, user-friendly dashboard, providing insights, performance stats, and unified control for your entire network, whether it's running on a dedicated device (Cloud Key, UDM) or installed software.",
     "parent": {
       "image": "ubuntu:20.04"
     },
