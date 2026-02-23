@@ -71,7 +71,7 @@ jobs:
                         core.setFailed(`input does not contain valid semver version: ${inspect(job.inputs, {showHidden:false, depth:null, colors:true})}`);
                       }else if(!job.inputs?.tag){
                         core.setFailed(`input does not contain valid git tag: ${inspect(job.inputs, {showHidden:false, depth:null, colors:true})}`);
-                      }else if(`${job.inputs?.version}` === 'null'){
+                      }else if(job.inputs.version == 'null' || null === job.inputs.version){
                         core.setFailed(`input version is null: ${inspect(job.inputs, {showHidden:false, depth:null, colors:true})}`);
                       }
                     }catch(e){
@@ -115,7 +115,7 @@ jobs:
               }
 
               // compare
-              if((latest && latest !== current) || checks.latestTagExists){
+              if(latest && latest !== current && !checks.latestTagExists){
                 core.info(`new ${semver.diff(current, latest)} release found (${latest}), updating ...`)
                 job.json.semver.version = latest;
 
