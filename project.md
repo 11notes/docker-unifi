@@ -1,3 +1,7 @@
+${{ title_caution }}
+${{ github:> [!CAUTION] }}
+${{ github:> }}This image, sadly, is EOL. Please create a backup of your Unifi controller, download it, setup a new [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) and restore your backup there. All Versions after 10.0.162 will only be published on the new image. Consider this image EOL! The auto update and build job is removed.
+
 ${{ content_synopsis }} This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
 
 ${{ content_uvp }} Good question! Because ...
