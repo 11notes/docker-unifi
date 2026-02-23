@@ -13,7 +13,7 @@
       "image": "ubuntu:20.04"
     },
     "built": {
-      "unifi": "https://community.ui.com/releases/r/network/9.1.120"
+      "unifi": "https://community.ui.com/releases/r/network/10.0.162"
     }
   },
   "grype": {
