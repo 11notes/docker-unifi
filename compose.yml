@@ -16,6 +16,7 @@ services:
     volumes:
       - "controller.var:/unifi/var"
     tmpfs:
+      # needed for read only file system
       - "/unifi/log:uid=1000,gid=1000"
       - "/unifi/run:uid=1000,gid=1000"
       - "/tmp:uid=1000,gid=1000"
@@ -23,6 +24,9 @@ services:
       - "3000:8443/tcp"
     networks:
       frontend:
+    # disable Unifi phone home function
+    extra_hosts:
+      - "trace.svc.ui.com:127.0.0.1"
     restart: always
 
 volumes:
