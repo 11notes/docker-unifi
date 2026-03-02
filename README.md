@@ -11,10 +11,10 @@ The UniFi Network Controller is the free, central software hub for Ubiquiti's Un
 
 # CAUTION ⚠️
 > [!CAUTION]
->BREAKING: Do not upgrade your image directly via compose from pre 10.1.85. Version 10.1.85 is using MongoDB 8 which is not compatible with pre 10.1.85 tags at all. Backup your container data. Create a Unifi backup. Create a completely new container setup for Unifi and **restore** your Unifi backup. If you don’t want that dependency with a single image, checkout my [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) image, which separates Unifi and the DB properly.
+>Do not upgrade your image directly via compose from pre 10.1.85. Version 10.1.85 is using MongoDB 8 which is **not compatible** with pre 10.1.85 tags at all. Backup your container data. Create a Unifi backup. Create a completely new container setup for Unifi and **restore** your Unifi backup. If you don’t want that dependency with a single image, checkout my [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) image, which separates Unifi and the DB properly.
 
 # SYNOPSIS 📖
-**What can I do with this?** This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
+**What can I do with this?** This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB!
 
 # UNIQUE VALUE PROPOSITION 💶
 **Why should I run this image and not the other image(s) that already exist?** Good question! Because ...
@@ -127,4 +127,4 @@ This image supports nobody by default. Simply add **-nobody** to any tag and the
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 02.03.2026, 14:51:58 (CET)*
+*created 02.03.2026, 15:05:00 (CET)*
