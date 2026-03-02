@@ -9,7 +9,7 @@ x-lockdown: &lockdown
 
 services:
   controller:
-    image: "11notes/unifi:10.0.162"
+    image: "11notes/unifi:10.1.85"
     <<: *lockdown
     environment:
       TZ: "Europe/Zurich"
