@@ -2,7 +2,7 @@ ${{ title_caution }}
 ${{ github:> [!CAUTION] }}
 ${{ github:> }}BREAKING: Do not upgrade your image directly via compose from pre 10.1.85. Version 10.1.85 is using MongoDB 8 which is not compatible with pre 10.1.85 tags at all. Backup your container data. Create a Unifi backup. Create a completely new container setup for Unifi and **restore** your Unifi backup. If you don’t want that dependency with a single image, checkout my [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) image, which separates Unifi and the DB properly.
 
-${{ content_synopsis }} This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
+${{ content_synopsis }} This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB 8.2!
 
 ${{ content_uvp }} Good question! Because ...
 
