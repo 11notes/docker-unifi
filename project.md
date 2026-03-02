@@ -1,6 +1,6 @@
 ${{ title_caution }}
 ${{ github:> [!CAUTION] }}
-${{ github:> }}This image, sadly, is EOL. Please create a backup of your Unifi controller, download it, setup a new [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) and restore your backup there. All Versions after 10.0.162 will only be published on the new image. Consider this image EOL! The auto update and build job is removed.
+${{ github:> }}BREAKING: Do not upgrade your image directly via compose from pre 10.1.85. Version 10.1.85 is using MongoDB 8 which is not compatible with pre 10.1.85 tags at all. Backup your container data. Create a Unifi backup. Create a completely new container setup for Unifi and **restore** your Unifi backup. If you don’t want that dependency with a single image, checkout my [Unifi Network Application image](https://github.com/11notes/docker-unifi-network-application) image, which separates Unifi and the DB properly.
 
 ${{ content_synopsis }} This image will provide you a rock solid<sup>1</sup> Unifi controller with included MongoDB (no separate image needed, since its EOL anyway).
 
