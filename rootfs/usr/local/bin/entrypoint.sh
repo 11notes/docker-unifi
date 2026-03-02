@@ -19,6 +19,7 @@
   if [ -z "${1}" ]; then
     cd /usr/lib/unifi
     set -- "/usr/bin/java" \
+      --enable-native-access=ALL-UNNAMED \
       -Xmx1024M \
       -Dfile.encoding=UTF-8 \
       -Djava.awt.headless=true \
