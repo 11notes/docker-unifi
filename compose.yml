@@ -18,6 +18,7 @@ services:
     tmpfs:
       - "/unifi/log:uid=1000,gid=1000"
       - "/unifi/run:uid=1000,gid=1000"
+      - "/tmp:uid=1000,gid=1000"
     ports:
       - "3000:8443/tcp"
     networks:
