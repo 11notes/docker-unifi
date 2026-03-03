@@ -51,12 +51,17 @@ services:
     volumes:
       - "controller.var:/unifi/var"
     tmpfs:
+      # needed for read only file system
       - "/unifi/log:uid=1000,gid=1000"
       - "/unifi/run:uid=1000,gid=1000"
+      - "/tmp:uid=1000,gid=1000"
     ports:
       - "3000:8443/tcp"
     networks:
       frontend:
+    # disable Unifi phone home function
+    extra_hosts:
+      - "trace.svc.ui.com:127.0.0.1"
     restart: always
 
 volumes:
@@ -122,9 +127,9 @@ This image supports nobody by default. Simply add **-nobody** to any tag and the
 >* Use Let’s Encrypt DNS-01 challenge to obtain valid SSL certificates for your services
 
 # DISCLAIMERS
-* <sup>1</sup> This image will automatically disable anonymous telemetry collected by Ubiquiti by adding a flag (`config.system_cfg.1=system.analytics.anonymous=disabled`) to each sites `config.properties`. You will still have to disable telemetry in the global settings too, to disable *all* telemetry. You can check your telemetry status by SSH’ing into an access point and checking ` grep analytics /tmp/system.cfg`, the output should read `disabled`. Make sure to also DNS block the FQDN `trace.svc.ui.com` in your DNS blocker.
+* <sup>1</sup> This image will automatically disable anonymous telemetry collected by Ubiquiti by adding a flag (`config.system_cfg.1=system.analytics.anonymous=disabled`) to each sites `config.properties`. You will still have to disable telemetry in the global settings too, to disable *all* telemetry. You can check your telemetry status by SSH’ing into an access point and checking `grep analytics /tmp/system.cfg`, the output should read `disabled`. Make sure not to forget the ```extra_hosts``` in your compose to prevent Unifi from phoning home.
 
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-unifi/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-unifi/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-unifi/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 02.03.2026, 15:05:00 (CET)*
+*created 02.03.2026, 21:32:25 (CET)*
