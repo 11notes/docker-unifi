@@ -4,7 +4,7 @@
   "name": "unifi",
   "root": "/unifi",
   "semver": {
-    "version": "10.1.85"
+    "version": "10.2.105"
   },
   "readme": {
     "description": "run Unifi Controller rootless.",
