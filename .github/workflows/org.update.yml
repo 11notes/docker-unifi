@@ -195,7 +195,7 @@ jobs:
           ref: "v${{ env.LATEST_TAG }}"
 
       - name: "update / revert if build failed"
-        if: env.WORKFLOW_UPDATE == 'true' && steps.build.outputs.workflow-conclusion == 'success'
+        if: env.WORKFLOW_UPDATE == 'true' && failure()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
