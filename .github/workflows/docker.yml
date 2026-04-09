@@ -700,7 +700,7 @@ jobs:
 
       # CREATE MAKRDOWN OF README.md
       - name: README.md / create
-        if: github.event.inputs.readme == 'true' && (steps.image-build.outcome == 'success' || ${{ inputs.run-name }} == 'readme')
+        if: github.event.inputs.readme == 'true' && (steps.image-build.outcome == 'success' || inputs.run-name == 'readme')
         id: github-readme
         continue-on-error: true
         uses: 11notes/action-docker-readme@v1
