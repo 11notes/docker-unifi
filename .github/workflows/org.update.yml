@@ -198,9 +198,7 @@ jobs:
         if: env.WORKFLOW_UPDATE == 'true' && failure()
         run: |
           git reset --hard ${{ env.WORKFLOW_UPDATE_PRE_COMMIT }}
-          git add .json
-          git commit -m "chore: revert auto upgrade to v${{ env.LATEST_VERSION }} (build failed!)"
-          git push -f origin HEAD:master
+          git push -f
           git push --delete origin v${{ env.LATEST_TAG }}
 
       - name: update / build container image for unraid
