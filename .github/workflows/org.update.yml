@@ -197,9 +197,9 @@ jobs:
       - name: "update / revert if build failed"
         if: env.WORKFLOW_UPDATE == 'true' && failure()
         run: |
-          git pull
           git push --delete origin v${{ env.LATEST_TAG }}
           git revert ${{ env.WORKFLOW_UPDATE_COMMIT }}
+          git add .json
           git commit -m "chore: revert auto upgrade to v${{ env.LATEST_VERSION }} (build failed!)"
           git push origin HEAD:master
 
