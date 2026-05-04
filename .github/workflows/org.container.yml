@@ -1,8 +1,12 @@
-name: docker
+name: org.container
 run-name: ${{ inputs.run-name }}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  GRYPE_MATCH_GOLANG_USING_CPES: true
+  GRYPE_MATCH_DOTNET_USING_CPES: true
+  GRYPE_MATCH_JAVASCRIPT_USING_CPES: true
+  GRYPE_MATCH_PYTHON_USING_CPES: true
 
 on:
   workflow_dispatch:
@@ -130,6 +134,7 @@ jobs:
       DOCKER_IMAGE_NAME_AND_VERSION: ${{ steps.setup-environment.outputs.DOCKER_IMAGE_NAME_AND_VERSION }}
       DOCKER_IMAGE_ARGUMENTS: ${{ steps.setup-environment.outputs.DOCKER_IMAGE_ARGUMENTS }}
       WORKFLOW_BUILD: ${{ steps.setup-environment.outputs.WORKFLOW_BUILD }}
+      WORKFLOW_BUILD_SUCCESS: ${{ steps.build-success.outputs.WORKFLOW_BUILD_SUCCESS }}
 
     timeout-minutes: 1440
 
@@ -266,7 +271,9 @@ jobs:
             docker.app.prefix = docker.image.prefix;
             docker.app.suffix = docker.image.suffix;
 
-            const semver = docker.app.version.split('.');
+            const semver = (
+              (/stable|latest/i.test(docker.app.version)) ? [] : docker.app.version.split('.')
+            );
             // setup tags
               if(!opt.dot?.semver?.disable?.rolling && !opt.input.etc?.semver?.disable?.rolling){
                 docker.image.tags.push('rolling');
@@ -356,6 +363,7 @@ jobs:
                   try{
                     const file = readFileSync(path).toString();
                     switch(true){
+                      case /11notes\/alpine\:stable/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', '11notes-alpine-stable'); break;
                       case /11notes\/go\:\$\{APP_GO_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'go'); break;
                       case /11notes\/python\:\$\{APP_PYTHON_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'python'); break;
                       case /11notes\/php\:\$\{APP_PHP_VERSION\}/ig.test(file): core.exportVariable('WORKFLOW_IMAGE_DEPENDENCY', 'php'); break;
@@ -525,6 +533,13 @@ jobs:
           name: digests-linux-${{ env.DOCKER_IMAGE_PLATFORM_SANITIZED }}
           path: ${{ runner.temp }}/digests/*
           if-no-files-found: error
+
+      # SET BUILD AS SUCCESSFULL
+      - name: container image / success
+        if: env.WORKFLOW_BUILD == 'true' && steps.image-push.outcome == 'success'
+        id: build-success
+        run: |
+          echo "WORKFLOW_BUILD_SUCCESS=true" >> $GITHUB_OUTPUT
 
 
       # ╔═════════════════════════════════════════════════════╗
@@ -700,7 +715,7 @@ jobs:
 
       # CREATE MAKRDOWN OF README.md
       - name: README.md / create
-        if: github.event.inputs.readme == 'true' && (steps.image-build.outcome == 'success' || inputs.run-name == 'readme')
+        if: github.event.inputs.readme == 'true' && (needs.docker.outputs.WORKFLOW_BUILD_SUCCESS == 'true' || github.event.inputs.run-name == 'readme')
         id: github-readme
         continue-on-error: true
         uses: 11notes/action-docker-readme@v1
